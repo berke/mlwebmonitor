@@ -1,0 +1,19 @@
+Source: monitor
+Section: admin
+Priority: optional
+Maintainer: Berke Durak <berke.durak@inria.fr>
+Uploaders: Berke Durak <berke.durak@inria.fr>
+Build-Depends: debhelper (>= 4.0.0), ocaml-findlib, libpcre-ocaml-dev, libnetclient-ocaml-dev, ocaml-best-compilers, chrpath
+Standards-Version: 3.6.2
+
+Package: monitor
+Architecture: alpha amd64 arm hppa i386 kfreebsd-i386 ia64 powerpc sparc
+Depends: ${shlibs:Depends}
+Recommends: wget
+Description: web server monitoring tool
+ This tool allows you to monitor one or more web sites (or other resources)
+ by regularly doing tests on them.  A test consists of grepping a resource
+ (an HTML page fetched by URL, or the output of an arbitrary command)
+ using a boolean combination of Perl-compatible regular expressions.  On failure,
+ a mail is sent to a list of admins.
+

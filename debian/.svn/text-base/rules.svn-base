@@ -1,0 +1,122 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+#
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+#
+# Modified to make a template file for a multi-binary package with separated
+# build-arch and build-indep targets  by Bill Allombert 2001
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+OCAMLABI := $(shell ocamlc -version)
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+TMPDIR = $(CURDIR)/debian/tmp
+ARCH = d
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	touch configure-stamp
+
+build: build-stamp
+build-stamp: build-arch build-indep
+	touch build-stamp
+
+build-arch: build-arch-stamp
+build-arch-stamp: configure-stamp
+#	$(MAKE) bt
+#       Make native on certain arches, and bytecode for everything
+	if [ -x /usr/bin/ocamlopt.opt ]; then \
+	    $(MAKE) OPT=.opt ; \
+	elif [ -x /usr/bin/ocamlopt ]; then \
+	    $(MAKE) ; \
+	fi
+	if [ -x /usr/bin/ocamlc.opt ]; then \
+	    $(MAKE) OPT=.opt bt ; \
+	elif [ -x /usr/bin/ocamlc ]; then \
+	    $(MAKE) bt ; \
+	fi
+	touch build-arch-stamp
+
+build-indep: build-indep-stamp
+build-indep-stamp: configure-stamp
+	#$(MAKE) doc
+	touch build-indep-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp build-arch-stamp build-indep-stamp configure-stamp
+
+	-$(MAKE) clean
+	rm -rf $(TMPDIR)
+	dh_clean
+
+install-indep: build-stamp
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	mkdir -p $(TMPDIR)
+	$(MAKE) install_bt DESTDIR=$(TMPDIR)
+
+install-arch: build-stamp
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	mkdir -p $(TMPDIR)
+	if [ -x /usr/bin/ocamlopt -o -x /usr/bin/ocamlopt.opt ]; then \
+	    $(MAKE) install DESTDIR=$(TMPDIR) ; \
+        fi
+
+# Must not depend on anything. This is to be called by
+# binary-arch/binary-indep in another 'make' thread.
+binary-common:
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_install --sourcedir=$(TMPDIR) --list-missing
+	-chrpath -d $(CURDIR)/debian/monitor/usr/bin/monitor
+	dh_installdocs
+	dh_installexamples
+	dh_installmenu
+	dh_installman
+	dh_installinfo
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_strip
+	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol -- -VF:OCamlABI="$(OCAMLABI)"
+	dh_md5sums
+	dh_builddeb
+
+# Build architecture independant packages using the common target.
+binary-indep: build install-indep
+	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
+
+# Build architecture dependant packages using the common target.
+binary-arch: build install-arch
+	# The arch-dependent packages are only available on archs supported by ocamlopt
+	-@if [ -x /usr/bin/ocamlopt ] ; then \
+	    $(MAKE) -f debian/rules DH_OPTIONS=-s binary-common ; \
+	else \
+	    echo "There are no native code compilers on arch $(shell dpkg --print-architecture) \
+	    so this package arch-dependant part should not build on it." ; \
+	fi
+
+binary: binary-arch binary-indep
+.PHONY: build clean binary-indep binary-arch binary install

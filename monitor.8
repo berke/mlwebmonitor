@@ -1,0 +1,157 @@
+.TH MONITOR 1 2006-05-24 "Linux" "User Commands"
+.SH NAME
+monitor \- monitor a set of URLs
+.SH SYNOPSIS
+.ad l
+.B monitor
+.RB [ \-continue ]
+.RB [ \-dump\ <url> ]
+.RB [ \-config-file\ <path> ]
+.RB [ \-debug ]
+.RB [ \-grep ]
+.RB [ \-delay\ <float> ]
+.RB [ \-sendmail\ <command> ]
+.RB [ \-help ]
+.br
+.B monitor
+.RB \-V
+.ad b
+.SH DESCRIPTION
+.B monitor
+allows you to monitor one or more web sites (or other resources)
+by regularly doing tests on them.  A test consists of grepping a resource
+(an HTML page fetched by URL, or the output of an arbitrary command)
+using a boolean combination of Perl-compatible regular expressions.  On failure,
+a mail is sent to a list of admins.
+
+.SH OPTIONS
+.IP \fB\-continue\fP
+Assume that everyone is aware of the present state of the monitored sites.  In other words,
+avoid sending the first set of messages.  This way, you can stop and restart monitor if your
+sites are down without resending a bunch of mails.
+.IP \fB\-dump\fP <url>
+Retrieve HTML document and dump its syntax tree.  Useful for debugging.
+.IP \fB\-config\fP <file>
+Set configuration file.  The default is monitor.config.  See CONFIGURATION FILE SYNTAX.
+.IP \fB\-debug\fP
+Enable debugging.  This will produce heavy debugging output on stderr.
+.IP \fB\-grep\fP <url> <regex>
+Download and grep a document for regexes.
+.IP \fB\-delay\fP <float>
+Specify the number of seconds to wait between two source retrievals.
+.IP \fB\-sendmail\fP <command>
+Set the template for the sendmail command.  The default is "/usr/sbin/sendmail ${WHO}"
+The string ${WHO} will be replaced by shell-escaped mail address of the recipient.
+The string ${SUBJECT} will be replaced by shell-escaped subject line of the mesage.
+.IP \fB\-contact\fP <mail>
+Set the e-mail address of the person administering the monitor.
+.SH PRINCIPLE OF OPERATION
+The configuration file specifies a list of entities to monitor.  These
+entities are named for convenience.
+For instance, if you wish to monitor 33 entities named titi1 to titi33,
+your configuration file will look like this :
+.IP
+to monitor "titi1" check that ...  thanks
+
+to monitor "titi2" check that ...  thanks
+
+ ...
+
+to monitor "titi33" check that ...  thanks
+
+.P
+.B
+monitor
+will then perform the a first set of tests on titi1,
+wait for
+.B
+delay
+seconds,
+then perform tests on titi2, and so on.
+
+Each set of tests gets some text from a URL or from a command and checks it for some
+regular expressions, which can be combined using the usual boolean operators.  Hence these
+sets look like
+.IP
+url "http://ara.edos-project.org/"
+has
+  /Search Debian packages using ara/ and
+  /The EDOS project/ and
+  /Sort cache/ and
+  not /could not be located|error|exception/
+
+.P
+This set of tests will be successful whenever the document retrieved at the URL
+.B
+http://ara.edos-project.org/
+matches all of the three regular expressions
+.B
+/Search Debian packages using ara/,
+.B
+/The EDOS project/
+and
+.B
+/Sort cache/
+but none matches
+.B
+/could not be located|error|exception/.
+
+As the
+.B
+netclient
+library doesn't support HTTPS, there is a facilty to retrieve a document using an external command.
+Hence you should use something like
+.IP
+command "/usr/bin/wget --quiet --no-check-certificate -O - https://protactinium.pps.jussieu.fr:12345/svn/edos/users/berke" outputs
+.P
+instead of
+.IP
+url "https://protactinium.pps.jussieu.fr:12345/svn/edos/users/berke" has
+.P
+Whenever a set of tests fails (that is, when their boolean combination returns false), a sequence of actions can be triggered.
+As actions,
+.B
+monitor
+can echo a string, call an external command or send mail.
+.IP
+  check that
+    ...
+  on failure
+    with subject "SVN server"
+    mail "berke.durak@inria.fr" and "roberto@dicosmo.org"
+    then
+    with subject "Hey dude, about the SVN server"
+    mail "Fabio.Mancinelli@pps.jussieu.fr"
+    then
+    with subject "Three steps to the software you need at the prices you want (TM)"
+    mail "alice@debian.org", "bob@debian.org" and "charles@debian.org"
+    then
+    echo "Houston, we have a problem!"
+    then
+    execute "rm -rf /"
+.P
+The number of successive failures required to trigger an action can be changed
+to 55 by replacing
+.IP
+on failure
+.P
+with
+.IP
+on more than 55 consecutive failures
+.P
+This only works for the peculiar value 55.  Also, proper grammar and punctuation are enforced
+within the limits of a DPDA parser.
+
+.SH SYNTAX OF CONFIGURATION FILE
+If the above explanation is not sufficient, check
+.B
+/usr/share/doc/monitor/edos.tst
+for a real-world example.
+
+.SH AUTHORS
+Berke Durak <berke.durak@inria.fr>
+
+.SH BUGS
+What ?
+
+.\"{{{}}}

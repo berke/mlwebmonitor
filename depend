@@ -1,0 +1,17 @@
+action.cmo: util.cmo target.cmo opt.cmi 
+action.cmx: util.cmx target.cmx opt.cmx 
+bool.cmo: bool.cmi 
+bool.cmx: bool.cmi 
+monitor.cmo: www.cmo util.cmo target.cmo parser.cmi opt.cmi bool.cmi \
+    action.cmo monitor.cmi 
+monitor.cmx: www.cmx util.cmx target.cmx parser.cmx opt.cmx bool.cmx \
+    action.cmx monitor.cmi 
+opt.cmo: opt.cmi 
+opt.cmx: opt.cmi 
+parser.cmo: util.cmo target.cmo bool.cmi parser.cmi 
+parser.cmx: util.cmx target.cmx bool.cmx parser.cmi 
+target.cmo: bool.cmi 
+target.cmx: bool.cmx 
+www.cmo: util.cmo 
+www.cmx: util.cmx 
+parser.cmi: target.cmo bool.cmi 

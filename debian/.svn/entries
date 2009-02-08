@@ -1,0 +1,119 @@
+8
+
+dir
+1
+svn+ssh://berke@svn.forge.ocamlcore.org/svnroot/mlwebmonitor/debian
+svn+ssh://berke@svn.forge.ocamlcore.org/svnroot/mlwebmonitor
+
+
+
+2008-03-10T14:06:28.628137Z
+1
+berke
+
+
+svn:special svn:externals svn:needs-lock
+
+control
+file
+
+
+
+
+2006-05-24T15:49:01.000000Z
+5e4e371d58d1b2c4243ca4d4ce40a200
+2008-03-10T14:06:28.628137Z
+1
+berke
+
+tmp
+dir
+
+files
+file
+
+
+
+
+2006-05-24T18:11:10.000000Z
+962860f232cb4827e796cd2374eae8ee
+2008-03-10T14:06:28.628137Z
+1
+berke
+
+compat
+file
+
+
+
+
+2006-05-24T15:49:01.000000Z
+48a24b70a0b376535542b996af517398
+2008-03-10T14:06:28.628137Z
+1
+berke
+
+changelog
+file
+
+
+
+
+2006-05-24T15:49:01.000000Z
+e76bb663b89a9904ba84c26eb4fa750f
+2008-03-10T14:06:28.628137Z
+1
+berke
+
+control.mine
+file
+
+
+
+
+2006-05-24T15:49:01.000000Z
+6412b6383e125ef16178a243aa84f6ba
+2008-03-10T14:06:28.628137Z
+1
+berke
+
+monitor
+dir
+
+copyright
+file
+
+
+
+
+2006-05-24T15:49:01.000000Z
+dbe94925deb32230336cb49d6fc08c27
+2008-03-10T14:06:28.628137Z
+1
+berke
+
+rules
+file
+
+
+
+
+2006-05-24T15:49:01.000000Z
+d8873cbbb6dffd681ba73b6459a7d7f8
+2008-03-10T14:06:28.628137Z
+1
+berke
+has-props
+
+monitor.install
+file
+
+
+
+
+2006-05-24T15:49:01.000000Z
+00752b12f700a7bfa567598b23747ee4
+2008-03-10T14:06:28.628137Z
+1
+berke
+

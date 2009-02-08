@@ -1,0 +1,5 @@
+usr/bin/monitor
+usr/share/doc/monitor/grammar.bnf
+usr/share/doc/monitor/README
+usr/share/doc/monitor/edos.config
+usr/share/man/man8/monitor.8.gz

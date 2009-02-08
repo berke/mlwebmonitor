@@ -1,0 +1,12 @@
+monitor (0.3) unstable; urgency=low
+
+  * Fixed paths to documentation.
+
+ -- Berke Durak <berke.durak@inria.fr>  Wed, 24 May 2006 17:36:21 +0200
+
+monitor (0.2) unstable; urgency=low
+
+  [ Berke Durak ]
+  * first packaged version
+
+ -- Berke Durak <berke.durak@inria.fr>  Wed, 24 May 2006 14:20:39 +0000
